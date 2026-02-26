@@ -1,0 +1,793 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 56;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		438E56052F5071B700505F5D /* AppIcon.png in Resources */ = {isa = PBXBuildFile; fileRef = 438E56042F5071B700505F5D /* AppIcon.png */; };
+		A00000010000000000000001 /* YourGroopApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = A00001010000000000000001 /* YourGroopApp.swift */; };
+		A00000010000000000000002 /* AppRootView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A00001010000000000000002 /* AppRootView.swift */; };
+		A00000010000000000000003 /* AppModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A00001010000000000000003 /* AppModel.swift */; };
+		A00000010000000000000004 /* AppRouter.swift in Sources */ = {isa = PBXBuildFile; fileRef = A00001010000000000000004 /* AppRouter.swift */; };
+		A00000010000000000000005 /* CreateAnnouncementView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A00001010000000000000005 /* CreateAnnouncementView.swift */; };
+		A00000010000000000000006 /* SignInView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A00001010000000000000006 /* SignInView.swift */; };
+		A00000010000000000000007 /* DiscoveryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A00001010000000000000007 /* DiscoveryView.swift */; };
+		A00000010000000000000008 /* GroopDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A00001010000000000000008 /* GroopDetailView.swift */; };
+		A00000010000000000000009 /* MyGroopsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A00001010000000000000009 /* MyGroopsView.swift */; };
+		A0000001000000000000000A /* Announcement.swift in Sources */ = {isa = PBXBuildFile; fileRef = A0000101000000000000000A /* Announcement.swift */; };
+		A0000001000000000000000B /* FeedItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = A0000101000000000000000B /* FeedItem.swift */; };
+		A0000001000000000000000C /* Groop.swift in Sources */ = {isa = PBXBuildFile; fileRef = A0000101000000000000000C /* Groop.swift */; };
+		A0000001000000000000000D /* APIClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = A0000101000000000000000D /* APIClient.swift */; };
+		A0000001000000000000000E /* MockAPIClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = A0000101000000000000000E /* MockAPIClient.swift */; };
+		A0000001000000000000000F /* GroopRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = A0000101000000000000000F /* GroopRepository.swift */; };
+		A00000010000000000000010 /* InMemoryGroopRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = A00001010000000000000010 /* InMemoryGroopRepository.swift */; };
+		A00000010000000000000011 /* EmptyStateView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A00001010000000000000011 /* EmptyStateView.swift */; };
+		A00000010000000000000012 /* LoadingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A00001010000000000000012 /* LoadingView.swift */; };
+		A00000010000000000000013 /* SurfaceCard.swift in Sources */ = {isa = PBXBuildFile; fileRef = A00001010000000000000013 /* SurfaceCard.swift */; };
+		A00000010000000000000014 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = A00001010000000000000014 /* Assets.xcassets */; };
+		A00000010000000000000015 /* HomeDashboardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A00001010000000000000015 /* HomeDashboardView.swift */; };
+		A00000010000000000000017 /* GroopMessage.swift in Sources */ = {isa = PBXBuildFile; fileRef = A00001010000000000000017 /* GroopMessage.swift */; };
+		A00000010000000000000018 /* GroopMember.swift in Sources */ = {isa = PBXBuildFile; fileRef = A00001010000000000000018 /* GroopMember.swift */; };
+		A00000010000000000000019 /* GroopChatView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A00001010000000000000019 /* GroopChatView.swift */; };
+		A0000001000000000000001A /* GroopMembersView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A0000101000000000000001A /* GroopMembersView.swift */; };
+		A0000001000000000000001B /* AnnouncementDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A0000101000000000000001B /* AnnouncementDetailView.swift */; };
+		A00000020000000000000001 /* YourGroopTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = A00002010000000000000001 /* YourGroopTests.swift */; };
+		A00000020000000000000002 /* XCTest.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A00009010000000000000001 /* XCTest.framework */; };
+		A00000030000000000000001 /* YourGroopUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = A00003010000000000000001 /* YourGroopUITests.swift */; };
+		A00000030000000000000002 /* YourGroopUITestsLaunchTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = A00003010000000000000002 /* YourGroopUITestsLaunchTests.swift */; };
+		A00000030000000000000003 /* XCTest.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A00009010000000000000001 /* XCTest.framework */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		A00005010000000000000001 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = A00004010000000000000001 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = A00006010000000000000001;
+			remoteInfo = YourGroop;
+		};
+		A00005010000000000000002 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = A00004010000000000000001 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = A00006010000000000000001;
+			remoteInfo = YourGroop;
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXFileReference section */
+		438E56042F5071B700505F5D /* AppIcon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = AppIcon.png; sourceTree = "<group>"; };
+		43E0AB7C2F50528D00C1076D /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		A00001010000000000000001 /* YourGroopApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = YourGroopApp.swift; sourceTree = "<group>"; };
+		A00001010000000000000002 /* AppRootView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppRootView.swift; sourceTree = "<group>"; };
+		A00001010000000000000003 /* AppModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppModel.swift; sourceTree = "<group>"; };
+		A00001010000000000000004 /* AppRouter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppRouter.swift; sourceTree = "<group>"; };
+		A00001010000000000000005 /* CreateAnnouncementView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreateAnnouncementView.swift; sourceTree = "<group>"; };
+		A00001010000000000000006 /* SignInView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignInView.swift; sourceTree = "<group>"; };
+		A00001010000000000000007 /* DiscoveryView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DiscoveryView.swift; sourceTree = "<group>"; };
+		A00001010000000000000008 /* GroopDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GroopDetailView.swift; sourceTree = "<group>"; };
+		A00001010000000000000009 /* MyGroopsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MyGroopsView.swift; sourceTree = "<group>"; };
+		A0000101000000000000000A /* Announcement.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Announcement.swift; sourceTree = "<group>"; };
+		A0000101000000000000000B /* FeedItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FeedItem.swift; sourceTree = "<group>"; };
+		A0000101000000000000000C /* Groop.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Groop.swift; sourceTree = "<group>"; };
+		A0000101000000000000000D /* APIClient.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = APIClient.swift; sourceTree = "<group>"; };
+		A0000101000000000000000E /* MockAPIClient.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockAPIClient.swift; sourceTree = "<group>"; };
+		A0000101000000000000000F /* GroopRepository.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GroopRepository.swift; sourceTree = "<group>"; };
+		A00001010000000000000010 /* InMemoryGroopRepository.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InMemoryGroopRepository.swift; sourceTree = "<group>"; };
+		A00001010000000000000011 /* EmptyStateView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EmptyStateView.swift; sourceTree = "<group>"; };
+		A00001010000000000000012 /* LoadingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoadingView.swift; sourceTree = "<group>"; };
+		A00001010000000000000013 /* SurfaceCard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SurfaceCard.swift; sourceTree = "<group>"; };
+		A00001010000000000000014 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		A00001010000000000000015 /* HomeDashboardView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeDashboardView.swift; sourceTree = "<group>"; };
+		A00001010000000000000017 /* GroopMessage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GroopMessage.swift; sourceTree = "<group>"; };
+		A00001010000000000000018 /* GroopMember.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GroopMember.swift; sourceTree = "<group>"; };
+		A00001010000000000000019 /* GroopChatView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GroopChatView.swift; sourceTree = "<group>"; };
+		A0000101000000000000001A /* GroopMembersView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GroopMembersView.swift; sourceTree = "<group>"; };
+		A0000101000000000000001B /* AnnouncementDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnnouncementDetailView.swift; sourceTree = "<group>"; };
+		A00002010000000000000001 /* YourGroopTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = YourGroopTests.swift; sourceTree = "<group>"; };
+		A00002010000000000000002 /* YourGroopTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = YourGroopTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		A00003010000000000000001 /* YourGroopUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = YourGroopUITests.swift; sourceTree = "<group>"; };
+		A00003010000000000000002 /* YourGroopUITestsLaunchTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = YourGroopUITestsLaunchTests.swift; sourceTree = "<group>"; };
+		A00003010000000000000003 /* YourGroopUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = YourGroopUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		A00006010000000000000002 /* YourGroop.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = YourGroop.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		A00009010000000000000001 /* XCTest.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = XCTest.framework; path = System/Library/Frameworks/XCTest.framework; sourceTree = SDKROOT; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		A00007010000000000000001 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		A00007010000000000000002 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				A00000020000000000000002 /* XCTest.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		A00007010000000000000003 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				A00000030000000000000003 /* XCTest.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		4339F7712F4FA75D00AC9416 /* Recovered References */ = {
+			isa = PBXGroup;
+			children = (
+				A00009010000000000000001 /* XCTest.framework */,
+			);
+			name = "Recovered References";
+			sourceTree = "<group>";
+		};
+		A00008010000000000000001 = {
+			isa = PBXGroup;
+			children = (
+				43E0AB7C2F50528D00C1076D /* Info.plist */,
+				A00008010000000000000002 /* YourGroop */,
+				A00008010000000000000003 /* YourGroopTests */,
+				A00008010000000000000004 /* YourGroopUITests */,
+				A00008010000000000000005 /* Products */,
+				4339F7712F4FA75D00AC9416 /* Recovered References */,
+			);
+			sourceTree = "<group>";
+		};
+		A00008010000000000000002 /* YourGroop */ = {
+			isa = PBXGroup;
+			children = (
+				A00001010000000000000001 /* YourGroopApp.swift */,
+				A00001010000000000000002 /* AppRootView.swift */,
+				A00008010000000000000006 /* Core */,
+				A00008010000000000000007 /* Features */,
+				A00008010000000000000008 /* Shared */,
+				A00008010000000000000009 /* Resources */,
+			);
+			path = YourGroop;
+			sourceTree = "<group>";
+		};
+		A00008010000000000000003 /* YourGroopTests */ = {
+			isa = PBXGroup;
+			children = (
+				A00002010000000000000001 /* YourGroopTests.swift */,
+			);
+			path = YourGroopTests;
+			sourceTree = "<group>";
+		};
+		A00008010000000000000004 /* YourGroopUITests */ = {
+			isa = PBXGroup;
+			children = (
+				A00003010000000000000001 /* YourGroopUITests.swift */,
+				A00003010000000000000002 /* YourGroopUITestsLaunchTests.swift */,
+			);
+			path = YourGroopUITests;
+			sourceTree = "<group>";
+		};
+		A00008010000000000000005 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				A00006010000000000000002 /* YourGroop.app */,
+				A00002010000000000000002 /* YourGroopTests.xctest */,
+				A00003010000000000000003 /* YourGroopUITests.xctest */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		A00008010000000000000006 /* Core */ = {
+			isa = PBXGroup;
+			children = (
+				A00001010000000000000003 /* AppModel.swift */,
+				A00001010000000000000004 /* AppRouter.swift */,
+			);
+			path = Core;
+			sourceTree = "<group>";
+		};
+		A00008010000000000000007 /* Features */ = {
+			isa = PBXGroup;
+			children = (
+				A0000801000000000000000A /* Auth */,
+				A0000801000000000000000B /* Groops */,
+				A0000801000000000000000C /* Discovery */,
+				A0000801000000000000000D /* Announcements */,
+				A00008010000000000000012 /* Dashboard */,
+			);
+			path = Features;
+			sourceTree = "<group>";
+		};
+		A00008010000000000000008 /* Shared */ = {
+			isa = PBXGroup;
+			children = (
+				A0000801000000000000000E /* Models */,
+				A0000801000000000000000F /* Networking */,
+				A00008010000000000000010 /* Repository */,
+				A00008010000000000000011 /* UI */,
+			);
+			path = Shared;
+			sourceTree = "<group>";
+		};
+		A00008010000000000000009 /* Resources */ = {
+			isa = PBXGroup;
+			children = (
+				A00001010000000000000014 /* Assets.xcassets */,
+				438E56042F5071B700505F5D /* AppIcon.png */,
+			);
+			path = Resources;
+			sourceTree = "<group>";
+		};
+		A0000801000000000000000A /* Auth */ = {
+			isa = PBXGroup;
+			children = (
+				A00001010000000000000006 /* SignInView.swift */,
+			);
+			path = Auth;
+			sourceTree = "<group>";
+		};
+		A0000801000000000000000B /* Groops */ = {
+			isa = PBXGroup;
+			children = (
+				A00001010000000000000019 /* GroopChatView.swift */,
+				A00001010000000000000008 /* GroopDetailView.swift */,
+				A0000101000000000000001A /* GroopMembersView.swift */,
+				A00001010000000000000009 /* MyGroopsView.swift */,
+			);
+			path = Groops;
+			sourceTree = "<group>";
+		};
+		A0000801000000000000000C /* Discovery */ = {
+			isa = PBXGroup;
+			children = (
+				A00001010000000000000007 /* DiscoveryView.swift */,
+			);
+			path = Discovery;
+			sourceTree = "<group>";
+		};
+		A0000801000000000000000D /* Announcements */ = {
+			isa = PBXGroup;
+			children = (
+				A0000101000000000000001B /* AnnouncementDetailView.swift */,
+				A00001010000000000000005 /* CreateAnnouncementView.swift */,
+			);
+			path = Announcements;
+			sourceTree = "<group>";
+		};
+		A0000801000000000000000E /* Models */ = {
+			isa = PBXGroup;
+			children = (
+				A0000101000000000000000A /* Announcement.swift */,
+				A0000101000000000000000B /* FeedItem.swift */,
+				A00001010000000000000018 /* GroopMember.swift */,
+				A00001010000000000000017 /* GroopMessage.swift */,
+				A0000101000000000000000C /* Groop.swift */,
+			);
+			path = Models;
+			sourceTree = "<group>";
+		};
+		A0000801000000000000000F /* Networking */ = {
+			isa = PBXGroup;
+			children = (
+				A0000101000000000000000D /* APIClient.swift */,
+				A0000101000000000000000E /* MockAPIClient.swift */,
+			);
+			path = Networking;
+			sourceTree = "<group>";
+		};
+		A00008010000000000000010 /* Repository */ = {
+			isa = PBXGroup;
+			children = (
+				A0000101000000000000000F /* GroopRepository.swift */,
+				A00001010000000000000010 /* InMemoryGroopRepository.swift */,
+			);
+			path = Repository;
+			sourceTree = "<group>";
+		};
+		A00008010000000000000011 /* UI */ = {
+			isa = PBXGroup;
+			children = (
+				A00001010000000000000011 /* EmptyStateView.swift */,
+				A00001010000000000000012 /* LoadingView.swift */,
+				A00001010000000000000013 /* SurfaceCard.swift */,
+			);
+			path = UI;
+			sourceTree = "<group>";
+		};
+		A00008010000000000000012 /* Dashboard */ = {
+			isa = PBXGroup;
+			children = (
+				A00001010000000000000015 /* HomeDashboardView.swift */,
+			);
+			path = Dashboard;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		A00006010000000000000001 /* YourGroop */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = A0000B010000000000000001 /* Build configuration list for PBXNativeTarget "YourGroop" */;
+			buildPhases = (
+				A00007020000000000000001 /* Sources */,
+				A00007010000000000000001 /* Frameworks */,
+				A00007030000000000000001 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = YourGroop;
+			productName = YourGroop;
+			productReference = A00006010000000000000002 /* YourGroop.app */;
+			productType = "com.apple.product-type.application";
+		};
+		A00006010000000000000003 /* YourGroopTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = A0000B010000000000000002 /* Build configuration list for PBXNativeTarget "YourGroopTests" */;
+			buildPhases = (
+				A00007020000000000000002 /* Sources */,
+				A00007010000000000000002 /* Frameworks */,
+				A00007030000000000000002 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				A0000C010000000000000001 /* PBXTargetDependency */,
+			);
+			name = YourGroopTests;
+			productName = YourGroopTests;
+			productReference = A00002010000000000000002 /* YourGroopTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
+		A00006010000000000000004 /* YourGroopUITests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = A0000B010000000000000003 /* Build configuration list for PBXNativeTarget "YourGroopUITests" */;
+			buildPhases = (
+				A00007020000000000000003 /* Sources */,
+				A00007010000000000000003 /* Frameworks */,
+				A00007030000000000000003 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				A0000C010000000000000002 /* PBXTargetDependency */,
+			);
+			name = YourGroopUITests;
+			productName = YourGroopUITests;
+			productReference = A00003010000000000000003 /* YourGroopUITests.xctest */;
+			productType = "com.apple.product-type.bundle.ui-testing";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		A00004010000000000000001 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				BuildIndependentTargetsInParallel = 1;
+				LastSwiftUpdateCheck = 1600;
+				LastUpgradeCheck = 2620;
+				TargetAttributes = {
+					A00006010000000000000003 = {
+						TestTargetID = A00006010000000000000001;
+					};
+					A00006010000000000000004 = {
+						TestTargetID = A00006010000000000000001;
+					};
+				};
+			};
+			buildConfigurationList = A0000B010000000000000004 /* Build configuration list for PBXProject "YourGroop" */;
+			compatibilityVersion = "Xcode 14.0";
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+				Base,
+			);
+			mainGroup = A00008010000000000000001;
+			productRefGroup = A00008010000000000000005 /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				A00006010000000000000001 /* YourGroop */,
+				A00006010000000000000003 /* YourGroopTests */,
+				A00006010000000000000004 /* YourGroopUITests */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		A00007030000000000000001 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				438E56052F5071B700505F5D /* AppIcon.png in Resources */,
+				A00000010000000000000014 /* Assets.xcassets in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		A00007030000000000000002 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		A00007030000000000000003 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		A00007020000000000000001 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				A00000010000000000000001 /* YourGroopApp.swift in Sources */,
+				A00000010000000000000002 /* AppRootView.swift in Sources */,
+				A00000010000000000000003 /* AppModel.swift in Sources */,
+				A00000010000000000000004 /* AppRouter.swift in Sources */,
+				A00000010000000000000005 /* CreateAnnouncementView.swift in Sources */,
+				A00000010000000000000006 /* SignInView.swift in Sources */,
+				A00000010000000000000007 /* DiscoveryView.swift in Sources */,
+				A00000010000000000000008 /* GroopDetailView.swift in Sources */,
+				A00000010000000000000009 /* MyGroopsView.swift in Sources */,
+				A0000001000000000000000A /* Announcement.swift in Sources */,
+				A0000001000000000000000B /* FeedItem.swift in Sources */,
+				A0000001000000000000000C /* Groop.swift in Sources */,
+				A0000001000000000000000D /* APIClient.swift in Sources */,
+				A0000001000000000000000E /* MockAPIClient.swift in Sources */,
+				A0000001000000000000000F /* GroopRepository.swift in Sources */,
+				A00000010000000000000010 /* InMemoryGroopRepository.swift in Sources */,
+				A00000010000000000000011 /* EmptyStateView.swift in Sources */,
+				A00000010000000000000012 /* LoadingView.swift in Sources */,
+				A00000010000000000000013 /* SurfaceCard.swift in Sources */,
+				A00000010000000000000015 /* HomeDashboardView.swift in Sources */,
+				A00000010000000000000017 /* GroopMessage.swift in Sources */,
+				A00000010000000000000018 /* GroopMember.swift in Sources */,
+				A00000010000000000000019 /* GroopChatView.swift in Sources */,
+				A0000001000000000000001A /* GroopMembersView.swift in Sources */,
+				A0000001000000000000001B /* AnnouncementDetailView.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		A00007020000000000000002 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				A00000020000000000000001 /* YourGroopTests.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		A00007020000000000000003 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				A00000030000000000000001 /* YourGroopUITests.swift in Sources */,
+				A00000030000000000000002 /* YourGroopUITestsLaunchTests.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		A0000C010000000000000001 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = A00006010000000000000001 /* YourGroop */;
+			targetProxy = A00005010000000000000001 /* PBXContainerItemProxy */;
+		};
+		A0000C010000000000000002 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = A00006010000000000000001 /* YourGroop */;
+			targetProxy = A00005010000000000000002 /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
+/* Begin XCBuildConfiguration section */
+		A0000A010000000000000001 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu17;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 18.0;
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = iphoneos;
+				STRING_CATALOG_GENERATE_SYMBOLS = YES;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+			};
+			name = Debug;
+		};
+		A0000A010000000000000002 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu17;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 18.0;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				SDKROOT = iphoneos;
+				STRING_CATALOG_GENERATE_SYMBOLS = YES;
+				SWIFT_COMPILATION_MODE = wholemodule;
+				SWIFT_OPTIMIZATION_LEVEL = "-O";
+			};
+			name = Release;
+		};
+		A0000A010000000000000003 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_INCLUDE_ALL_APPICON_ASSETS = NO;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = 8NVZG92W2R;
+				GENERATE_INFOPLIST_FILE = NO;
+				INFOPLIST_FILE = Info.plist;
+				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 18.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.example.YourGroop;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
+				SUPPORTS_MACCATALYST = NO;
+				SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD = NO;
+				SUPPORTS_XR_DESIGNED_FOR_IPHONE_IPAD = NO;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 6.0;
+				TARGETED_DEVICE_FAMILY = 1;
+			};
+			name = Debug;
+		};
+		A0000A010000000000000004 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_INCLUDE_ALL_APPICON_ASSETS = NO;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = 8NVZG92W2R;
+				GENERATE_INFOPLIST_FILE = NO;
+				INFOPLIST_FILE = Info.plist;
+				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 18.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.example.YourGroop;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
+				SUPPORTS_MACCATALYST = NO;
+				SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD = NO;
+				SUPPORTS_XR_DESIGNED_FOR_IPHONE_IPAD = NO;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 6.0;
+				TARGETED_DEVICE_FAMILY = 1;
+			};
+			name = Release;
+		};
+		A0000A010000000000000005 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = "";
+				GENERATE_INFOPLIST_FILE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 18.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.example.YourGroopTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 6.0;
+				TARGETED_DEVICE_FAMILY = 1;
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/YourGroop.app/YourGroop";
+			};
+			name = Debug;
+		};
+		A0000A010000000000000006 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = "";
+				GENERATE_INFOPLIST_FILE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 18.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.example.YourGroopTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 6.0;
+				TARGETED_DEVICE_FAMILY = 1;
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/YourGroop.app/YourGroop";
+			};
+			name = Release;
+		};
+		A0000A010000000000000007 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = "";
+				GENERATE_INFOPLIST_FILE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 18.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.example.YourGroopUITests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 6.0;
+				TARGETED_DEVICE_FAMILY = 1;
+				TEST_TARGET_NAME = YourGroop;
+			};
+			name = Debug;
+		};
+		A0000A010000000000000008 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = "";
+				GENERATE_INFOPLIST_FILE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 18.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.example.YourGroopUITests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 6.0;
+				TARGETED_DEVICE_FAMILY = 1;
+				TEST_TARGET_NAME = YourGroop;
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		A0000B010000000000000001 /* Build configuration list for PBXNativeTarget "YourGroop" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				A0000A010000000000000003 /* Debug */,
+				A0000A010000000000000004 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		A0000B010000000000000002 /* Build configuration list for PBXNativeTarget "YourGroopTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				A0000A010000000000000005 /* Debug */,
+				A0000A010000000000000006 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		A0000B010000000000000003 /* Build configuration list for PBXNativeTarget "YourGroopUITests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				A0000A010000000000000007 /* Debug */,
+				A0000A010000000000000008 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		A0000B010000000000000004 /* Build configuration list for PBXProject "YourGroop" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				A0000A010000000000000001 /* Debug */,
+				A0000A010000000000000002 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = A00004010000000000000001 /* Project object */;
+}
