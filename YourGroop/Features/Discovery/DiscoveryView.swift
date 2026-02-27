@@ -2,27 +2,6 @@ import SwiftUI
 import MapKit
 import CoreLocation
 
-private enum DiscoveryCategory: String, CaseIterable {
-    case all = "All"
-    case coworking = "Co-Working"
-    case fitness = "Fitness"
-    case books = "Books"
-    case games = "Games"
-    case outdoors = "Outdoors"
-    case arts = "Arts"
-}
-
-private enum DiscoveryMode: String, CaseIterable {
-    case map = "Map"
-    case list = "List"
-}
-
-private enum DiscoverySheetState {
-    case peek
-    case medium
-    case full
-}
-
 private struct DiscoveryMeta {
     let distance: String
     let isActiveNow: Bool
@@ -53,17 +32,16 @@ struct DiscoveryView: View {
     @Environment(AppModel.self) private var appModel
 
     let groops: [Groop]
+    var isActive: Bool = true
+    var onBack: (() -> Void)? = nil
 
     @Namespace private var mapScope
     @StateObject private var locationManager = DiscoveryLocationManager()
 
     @State private var searchText = ""
-    @State private var selectedCategory: DiscoveryCategory = .all
     @State private var joiningGroopIDs: Set<UUID> = []
-    @State private var mode: DiscoveryMode = .map
-
-    @State private var sheetState: DiscoverySheetState = .medium
-    @State private var dragTranslation: CGFloat = 0
+    @State private var isDiscoverySheetPresented = true
+    @State private var selectedDetent: PresentationDetent = .medium
 
     @State private var selectedGroopID: UUID?
     @State private var cameraPosition: MapCameraPosition = .region(
@@ -77,8 +55,6 @@ struct DiscoveryView: View {
         let query = searchText.trimmingCharacters(in: .whitespacesAndNewlines).lowercased()
 
         let filtered = groops.filter { groop in
-            let matchesCategory = selectedCategory == .all || groop.category == selectedCategory.rawValue
-
             let matchesSearch: Bool
             if query.isEmpty {
                 matchesSearch = true
@@ -88,7 +64,7 @@ struct DiscoveryView: View {
                     || groop.location.lowercased().contains(query)
             }
 
-            return matchesCategory && matchesSearch
+            return matchesSearch
         }
 
         return filtered.sorted { $0.memberCount > $1.memberCount }
@@ -99,16 +75,29 @@ struct DiscoveryView: View {
     }
 
     var body: some View {
-        GeometryReader { geo in
-            ZStack(alignment: .bottom) {
-                mapBackdrop
-
-                draggableSheet(geo: geo)
-                mapFloatingControls(geo: geo)
+        ZStack(alignment: .topTrailing) {
+            mapBackdrop
+            mapFloatingControls
+        }
+        .task {
+            locationManager.requestPermission()
+        }
+        .sheet(isPresented: $isDiscoverySheetPresented) {
+            discoverySheet
+                .interactiveDismissDisabled(true)
+                .presentationDetents([.fraction(0.26), .medium, .large], selection: $selectedDetent)
+                .presentationDragIndicator(.visible)
+                .presentationBackground(.regularMaterial)
+                .presentationCornerRadius(26)
+                .presentationBackgroundInteraction(.enabled)
+        }
+        .onAppear {
+            if isActive {
+                isDiscoverySheetPresented = true
             }
-            .task {
-                locationManager.requestPermission()
-            }
+        }
+        .onChange(of: isActive) { _, active in
+            isDiscoverySheetPresented = active
         }
     }
 
@@ -138,7 +127,7 @@ struct DiscoveryView: View {
         .ignoresSafeArea()
     }
 
-    private func mapFloatingControls(geo: GeometryProxy) -> some View {
+    private var mapFloatingControls: some View {
         VStack(spacing: 10) {
             MapCompass(scope: mapScope)
             MapUserLocationButton(scope: mapScope)
@@ -147,165 +136,55 @@ struct DiscoveryView: View {
                     centerOnUserIfAvailable()
                 }
         }
-        .position(x: geo.size.width - 28, y: controlsYPosition(geo: geo))
+        .padding(.trailing, 14)
+        .padding(.top, 110)
     }
 
-    private func draggableSheet(geo: GeometryProxy) -> some View {
-        let heights = sheetHeights(totalHeight: geo.size.height)
-        let maxHeight = heights.full
-        let currentHeight = height(for: sheetState, heights: heights)
-        let minOffset: CGFloat = 0
-        let maxOffset: CGFloat = maxHeight - heights.peek
-        let baseOffset = maxHeight - currentHeight
-        let offset = (baseOffset + dragTranslation).clamped(to: minOffset...maxOffset)
-
-        return VStack(spacing: 0) {
-            sheetGrabber(heights: heights, maxHeight: maxHeight)
-            sheetContent
-        }
-        .frame(height: maxHeight, alignment: .top)
-        .background(.ultraThinMaterial, in: RoundedRectangle(cornerRadius: 26, style: .continuous))
-        .overlay(
-            RoundedRectangle(cornerRadius: 26, style: .continuous)
-                .strokeBorder(.white.opacity(0.2), lineWidth: 1)
-        )
-        .offset(y: offset)
-        .animation(.spring(response: 0.28, dampingFraction: 0.86), value: sheetState)
-    }
-
-    private func sheetGrabber(heights: (peek: CGFloat, medium: CGFloat, full: CGFloat), maxHeight: CGFloat) -> some View {
-        let minOffset: CGFloat = 0
-        let maxOffset: CGFloat = maxHeight - heights.peek
-
-        return VStack(spacing: 8) {
-            Capsule()
-                .fill(.secondary.opacity(0.35))
-                .frame(width: 38, height: 5)
-        }
-        .frame(maxWidth: .infinity)
-        .padding(.top, 10)
-        .padding(.bottom, 6)
-        .contentShape(Rectangle())
-        .gesture(
-            DragGesture(minimumDistance: 5)
-                .onChanged { value in
-                    dragTranslation = value.translation.height
-                }
-                .onEnded { value in
-                    let current = height(for: sheetState, heights: heights)
-                    let rawOffset = (maxHeight - current + value.translation.height).clamped(to: minOffset...maxOffset)
-                    let resultingHeight = maxHeight - rawOffset
-
-                    let candidates: [DiscoverySheetState: CGFloat] = [
-                        .peek: heights.peek,
-                        .medium: heights.medium,
-                        .full: heights.full
-                    ]
-
-                    if let nearest = candidates.min(by: {
-                        abs($0.value - resultingHeight) < abs($1.value - resultingHeight)
-                    })?.key {
-                        sheetState = nearest
+    private var discoverySheet: some View {
+        NavigationStack {
+            List {
+                if filteredGroops.isEmpty {
+                    Section {
+                        ContentUnavailableView(
+                            "No Local Matches",
+                            systemImage: "globe",
+                            description: Text("Try another search term.")
+                        )
+                    }
+                } else {
+                    Section("Featured Nearby") {
+                        featuredRow
+                            .listRowInsets(EdgeInsets(top: 8, leading: 0, bottom: 8, trailing: 0))
+                            .listRowBackground(Color(uiColor: .systemGroupedBackground))
                     }
 
-                    dragTranslation = 0
-                }
-        )
-    }
-
-    private var sheetContent: some View {
-        VStack(alignment: .leading, spacing: 12) {
-            modeToggle
-            searchRow
-            categoryRow
-
-            if mode == .map {
-                mapModeContent
-            } else {
-                listModeContent
-            }
-        }
-        .padding(.horizontal, 14)
-        .padding(.bottom, 16)
-    }
-
-    private var modeToggle: some View {
-        Picker("View", selection: $mode) {
-            ForEach(DiscoveryMode.allCases, id: \.self) { mode in
-                Text(mode.rawValue).tag(mode)
-            }
-        }
-        .pickerStyle(.segmented)
-    }
-
-    private var searchRow: some View {
-        HStack(spacing: 10) {
-            Image(systemName: "magnifyingglass")
-                .foregroundStyle(.secondary)
-            TextField("Search nearby Groops", text: $searchText)
-                .textInputAutocapitalization(.never)
-                .autocorrectionDisabled()
-            Image(systemName: "slider.horizontal.3")
-                .foregroundStyle(.secondary)
-        }
-        .padding(.horizontal, 12)
-        .padding(.vertical, 10)
-        .background(.regularMaterial, in: RoundedRectangle(cornerRadius: 12, style: .continuous))
-    }
-
-    private var categoryRow: some View {
-        ScrollView(.horizontal, showsIndicators: false) {
-            HStack(spacing: 8) {
-                ForEach(DiscoveryCategory.allCases, id: \.self) { category in
-                    Button {
-                        selectedCategory = category
-                    } label: {
-                        Text(category.rawValue)
-                            .font(.caption.weight(.medium))
-                            .padding(.horizontal, 10)
-                            .padding(.vertical, 8)
-                            .background(
-                                selectedCategory == category
-                                    ? AnyShapeStyle(Color.white.opacity(0.28))
-                                    : AnyShapeStyle(.thinMaterial),
-                                in: Capsule()
-                            )
+                    Section("All Results") {
+                        resultsRows(limit: 6)
                     }
-                    .buttonStyle(.plain)
                 }
             }
-        }
-    }
-
-    private var mapModeContent: some View {
-        Group {
-            if filteredGroops.isEmpty {
-                EmptyStateView(
-                    systemImage: "globe",
-                    title: "No Local Matches",
-                    message: "Try another category or search term."
-                )
-            } else {
-                sectionTitle("Featured Nearby")
-                featuredRow
-
-                sectionTitle("All Results")
-                resultsList(limit: 6)
-            }
-        }
-    }
-
-    private var listModeContent: some View {
-        Group {
-            if filteredGroops.isEmpty {
-                EmptyStateView(
-                    systemImage: "list.bullet",
-                    title: "No Results",
-                    message: "Try broadening your filters."
-                )
-            } else {
-                sectionTitle("All Results")
-                resultsList(limit: filteredGroops.count)
+            .listStyle(.insetGrouped)
+            .scrollContentBackground(.hidden)
+            .background(.clear)
+            .searchable(
+                text: $searchText,
+                placement: .navigationBarDrawer(displayMode: .always),
+                prompt: "Search nearby Groops"
+            )
+            .navigationTitle("Discovery")
+            .navigationBarTitleDisplayMode(.inline)
+            .toolbar {
+                if onBack != nil {
+                    ToolbarItem(placement: .topBarLeading) {
+                        Button {
+                            onBack?()
+                        } label: {
+                            Image(systemName: "chevron.backward")
+                        }
+                        .accessibilityLabel("Back")
+                        .tint(.primary)
+                    }
+                }
             }
         }
     }
@@ -337,74 +216,73 @@ struct DiscoveryView: View {
                         }
                         .frame(width: 188, alignment: .leading)
                         .padding(12)
-                        .background(.regularMaterial, in: RoundedRectangle(cornerRadius: 12, style: .continuous))
+                        .background(
+                            Color(uiColor: .secondarySystemGroupedBackground),
+                            in: RoundedRectangle(cornerRadius: 14, style: .continuous)
+                        )
+                        .overlay(
+                            RoundedRectangle(cornerRadius: 14, style: .continuous)
+                                .strokeBorder(Color(uiColor: .separator).opacity(0.18), lineWidth: 1)
+                        )
                     }
                     .buttonStyle(.plain)
                 }
             }
+            .padding(.horizontal, 2)
         }
     }
 
-    private func resultsList(limit: Int) -> some View {
-        ScrollView {
-            LazyVStack(spacing: 10) {
-                ForEach(Array(filteredGroops.prefix(limit))) { groop in
-                    let meta = meta(for: groop)
+    private func resultsRows(limit: Int) -> some View {
+        ForEach(Array(filteredGroops.prefix(limit))) { groop in
+            let meta = meta(for: groop)
 
-                    SurfaceCard {
-                        HStack(alignment: .top, spacing: 10) {
-                            VStack(alignment: .leading, spacing: 6) {
-                                Text(groop.name)
-                                    .font(.headline)
-                                Text("\(groop.category) • \(groop.location)")
-                                    .font(.subheadline)
-                                    .foregroundStyle(.secondary)
+            HStack(alignment: .top, spacing: 12) {
+                VStack(alignment: .leading, spacing: 6) {
+                    Text(groop.name)
+                        .font(.headline)
+                    Text("\(groop.category) • \(groop.location)")
+                        .font(.subheadline)
+                        .foregroundStyle(.secondary)
 
-                                HStack(spacing: 6) {
-                                    chip(text: meta.distance, icon: "figure.walk")
-                                    if meta.isActiveNow {
-                                        chip(text: "Active now", icon: "bolt.fill", tint: .green)
-                                    }
-                                }
-
-                                Text("\(groop.memberCount) members")
-                                    .font(.footnote)
-                                    .foregroundStyle(.secondary)
-                            }
-
-                            Spacer()
-
-                            Button {
-                                joiningGroopIDs.insert(groop.id)
-                                Task {
-                                    await appModel.joinGroop(id: groop.id)
-                                    joiningGroopIDs.remove(groop.id)
-                                }
-                            } label: {
-                                if joiningGroopIDs.contains(groop.id) {
-                                    ProgressView()
-                                        .frame(width: 58)
-                                } else {
-                                    Text("Join")
-                                        .frame(width: 58)
-                                }
-                            }
-                            .buttonStyle(.borderedProminent)
-                            .controlSize(.regular)
-                            .disabled(joiningGroopIDs.contains(groop.id))
-                            .accessibilityLabel("Join \(groop.name)")
+                    HStack(spacing: 6) {
+                        Label(meta.distance, systemImage: "figure.walk")
+                            .font(.caption2)
+                            .foregroundStyle(.secondary)
+                        if meta.isActiveNow {
+                            Label("Active now", systemImage: "bolt.fill")
+                                .font(.caption2)
+                                .foregroundStyle(.green)
                         }
                     }
-                }
-            }
-            .padding(.bottom, 4)
-        }
-    }
 
-    private func sectionTitle(_ title: String) -> some View {
-        Text(title)
-            .font(.headline)
-            .padding(.leading, 2)
+                    Text("\(groop.memberCount) members")
+                        .font(.footnote)
+                        .foregroundStyle(.secondary)
+                }
+
+                Spacer()
+
+                Button {
+                    joiningGroopIDs.insert(groop.id)
+                    Task {
+                        await appModel.joinGroop(id: groop.id)
+                        joiningGroopIDs.remove(groop.id)
+                    }
+                } label: {
+                    if joiningGroopIDs.contains(groop.id) {
+                        ProgressView()
+                            .frame(width: 58)
+                    } else {
+                        Text("Join")
+                            .frame(width: 58)
+                    }
+                }
+                .buttonStyle(.borderedProminent)
+                .disabled(joiningGroopIDs.contains(groop.id))
+                .accessibilityLabel("Join \(groop.name)")
+            }
+            .padding(.vertical, 4)
+        }
     }
 
     private func chip(text: String, icon: String, tint: Color = .secondary) -> some View {
@@ -444,7 +322,7 @@ struct DiscoveryView: View {
                 span: MKCoordinateSpan(latitudeDelta: 0.03, longitudeDelta: 0.03)
             )
         )
-        sheetState = .medium
+        selectedDetent = .medium
     }
 
     private func centerOnUserIfAvailable() {
@@ -473,40 +351,4 @@ struct DiscoveryView: View {
         }
     }
 
-    private func sheetHeights(totalHeight: CGFloat) -> (peek: CGFloat, medium: CGFloat, full: CGFloat) {
-        let peek = max(220, totalHeight * 0.30)
-        let medium = max(360, totalHeight * 0.58)
-        let full = max(460, totalHeight * 0.86)
-        return (peek, medium, full)
-    }
-
-    private func height(for state: DiscoverySheetState, heights: (peek: CGFloat, medium: CGFloat, full: CGFloat)) -> CGFloat {
-        switch state {
-        case .peek:
-            return heights.peek
-        case .medium:
-            return heights.medium
-        case .full:
-            return heights.full
-        }
-    }
-
-    private func controlsYPosition(geo: GeometryProxy) -> CGFloat {
-        let heights = sheetHeights(totalHeight: geo.size.height)
-        let maxHeight = heights.full
-        let currentHeight = height(for: sheetState, heights: heights)
-        let maxOffset = maxHeight - heights.peek
-        let baseOffset = maxHeight - currentHeight
-        let offset = (baseOffset + dragTranslation).clamped(to: 0...maxOffset)
-        let sheetTop = geo.size.height - maxHeight + offset
-        let preferredY = sheetTop - 74
-        let topLimit = geo.safeAreaInsets.top + 72
-        return max(topLimit, preferredY)
-    }
-}
-
-private extension Comparable {
-    func clamped(to limits: ClosedRange<Self>) -> Self {
-        min(max(self, limits.lowerBound), limits.upperBound)
-    }
 }

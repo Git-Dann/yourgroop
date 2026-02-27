@@ -16,12 +16,14 @@ private enum MyGroopsSort: String, CaseIterable {
 
 struct MyGroopsView: View {
     @Environment(AppModel.self) private var appModel
+    @Environment(AppRouter.self) private var router
 
     let groops: [Groop]
 
     @State private var searchText = ""
     @State private var sortMode: MyGroopsSort = .members
     @State private var selectedCategory: String = "All"
+    @State private var isFilterSheetPresented = false
 
     private var categories: [String] {
         let unique = Set(groops.map(\.category))
@@ -61,6 +63,10 @@ struct MyGroopsView: View {
         groops.max(by: { $0.memberCount < $1.memberCount })
     }
 
+    private var hasActiveFilters: Bool {
+        !searchText.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty || selectedCategory != "All"
+    }
+
     var body: some View {
         ScrollView {
             VStack(alignment: .leading, spacing: 16) {
@@ -77,7 +83,6 @@ struct MyGroopsView: View {
                     )
                     .padding(.top, 8)
                 } else {
-                    sortAndFilterSection
                     quickJumpSection
                     groopsSection
                 }
@@ -92,6 +97,52 @@ struct MyGroopsView: View {
             )
         )
         .searchable(text: $searchText, prompt: "Search groops")
+        .toolbar {
+            ToolbarItem(placement: .topBarTrailing) {
+                Button {
+                    isFilterSheetPresented = true
+                } label: {
+                    Image(systemName: "line.3.horizontal.decrease.circle")
+                }
+                .accessibilityLabel("Open filters")
+            }
+        }
+        .sheet(isPresented: $isFilterSheetPresented) {
+            NavigationStack {
+                Form {
+                    Section("Sort by") {
+                        Picker("Sort by", selection: $sortMode) {
+                            ForEach(MyGroopsSort.allCases, id: \.self) { mode in
+                                Text(mode.title).tag(mode)
+                            }
+                        }
+                        .pickerStyle(.inline)
+                    }
+
+                    Section("Category") {
+                        Picker("Category", selection: $selectedCategory) {
+                            ForEach(categories, id: \.self) { category in
+                                Text(category).tag(category)
+                            }
+                        }
+                    }
+                }
+                .navigationTitle("Filter")
+                .navigationBarTitleDisplayMode(.inline)
+                .toolbar {
+                    ToolbarItem(placement: .topBarLeading) {
+                        Button("Reset") {
+                            sortMode = .members
+                            selectedCategory = "All"
+                        }
+                    }
+                    ToolbarItem(placement: .topBarTrailing) {
+                        Button("Done") { isFilterSheetPresented = false }
+                    }
+                }
+            }
+            .presentationDetents([.medium])
+        }
         .refreshable {
             await appModel.refreshAll()
         }
@@ -131,42 +182,6 @@ struct MyGroopsView: View {
         )
     }
 
-    private var sortAndFilterSection: some View {
-        VStack(alignment: .leading, spacing: 10) {
-            Text("Filter & Sort")
-                .font(.headline)
-
-            Picker("Sort groops", selection: $sortMode) {
-                ForEach(MyGroopsSort.allCases, id: \.self) { mode in
-                    Text(mode.title).tag(mode)
-                }
-            }
-            .pickerStyle(.segmented)
-
-            ScrollView(.horizontal, showsIndicators: false) {
-                HStack(spacing: 8) {
-                    ForEach(categories, id: \.self) { category in
-                        Button {
-                            selectedCategory = category
-                        } label: {
-                            Text(category)
-                                .font(.caption.weight(.medium))
-                                .padding(.horizontal, 10)
-                                .padding(.vertical, 8)
-                                .background(
-                                    selectedCategory == category ?
-                                    AnyShapeStyle(Color(uiColor: .systemBlue).opacity(0.2)) :
-                                    AnyShapeStyle(.regularMaterial),
-                                    in: Capsule()
-                                )
-                        }
-                        .buttonStyle(.plain)
-                    }
-                }
-            }
-        }
-    }
-
     private var quickJumpSection: some View {
         VStack(alignment: .leading, spacing: 10) {
             Text("Quick Jump")
@@ -176,24 +191,49 @@ struct MyGroopsView: View {
                 HStack(spacing: 10) {
                     ForEach(Array(visibleGroops.prefix(4))) { groop in
                         NavigationLink(value: AppRoute.groopDetail(groop.id)) {
-                            VStack(alignment: .leading, spacing: 6) {
-                                Text(groop.name)
-                                    .font(.subheadline.weight(.semibold))
-                                    .lineLimit(2)
-                                    .multilineTextAlignment(.leading)
+                            VStack(alignment: .leading, spacing: 8) {
+                                HStack(alignment: .top, spacing: 8) {
+                                    Text(groop.name)
+                                        .font(.subheadline.weight(.semibold))
+                                        .lineLimit(1)
+                                        .multilineTextAlignment(.leading)
+                                    Spacer(minLength: 4)
+                                    Image(systemName: "arrow.up.right")
+                                        .font(.caption2.weight(.semibold))
+                                        .foregroundStyle(.tertiary)
+                                }
 
                                 Text(groop.location)
                                     .font(.caption)
                                     .foregroundStyle(.secondary)
+                                    .lineLimit(1)
+
+                                HStack {
+                                    Label("\(groop.memberCount)", systemImage: "person.2.fill")
+                                        .font(.caption2)
+                                        .foregroundStyle(.secondary)
+
+                                    Spacer()
+
+                                    Text("Open")
+                                        .font(.caption2.weight(.semibold))
+                                        .foregroundStyle(.tint)
+                                }
                             }
-                            .frame(width: 170, alignment: .leading)
+                            .frame(width: 172, alignment: .leading)
                             .padding(12)
-                            .background(.regularMaterial, in: RoundedRectangle(cornerRadius: 12, style: .continuous))
+                            .background(Color(uiColor: .secondarySystemBackground), in: RoundedRectangle(cornerRadius: 14, style: .continuous))
+                            .overlay(
+                                RoundedRectangle(cornerRadius: 14, style: .continuous)
+                                    .strokeBorder(.white.opacity(0.2), lineWidth: 1)
+                            )
                         }
                         .buttonStyle(.plain)
                     }
                 }
+                .padding(.trailing, 8)
             }
+            .scrollClipDisabled()
         }
     }
 
@@ -206,35 +246,76 @@ struct MyGroopsView: View {
                 Text("No matches for your current filters.")
                     .font(.subheadline)
                     .foregroundStyle(.secondary)
+
+                if hasActiveFilters {
+                    Button("Reset filters") {
+                        searchText = ""
+                        selectedCategory = "All"
+                    }
+                    .buttonStyle(.bordered)
+                    .controlSize(.small)
+                }
             } else {
                 ForEach(visibleGroops) { groop in
                     NavigationLink(value: AppRoute.groopDetail(groop.id)) {
-                        SurfaceCard {
+                        VStack(alignment: .leading, spacing: 12) {
                             HStack(alignment: .top, spacing: 10) {
-                                VStack(alignment: .leading, spacing: 6) {
-                                    Text(groop.name)
-                                        .font(.headline)
-                                        .multilineTextAlignment(.leading)
+                                Text(groop.name)
+                                    .font(.headline)
+                                    .multilineTextAlignment(.leading)
+                                    .lineLimit(2)
 
-                                    Text("\(groop.category) • \(groop.location)")
-                                        .font(.subheadline)
-                                        .foregroundStyle(.secondary)
-
-                                    Label("\(groop.memberCount) members", systemImage: "person.2.fill")
-                                        .font(.footnote)
-                                        .foregroundStyle(.secondary)
-                                }
-
-                                Spacer()
+                                Spacer(minLength: 8)
 
                                 Image(systemName: "chevron.right")
                                     .font(.caption.weight(.semibold))
                                     .foregroundStyle(.tertiary)
                                     .padding(.top, 4)
                             }
+
+                            Text("\(groop.category) • \(groop.location)")
+                                .font(.subheadline)
+                                .foregroundStyle(.secondary)
+                                .lineLimit(1)
+
+                            HStack(spacing: 8) {
+                                Label("\(groop.memberCount) members", systemImage: "person.2.fill")
+                                    .font(.footnote)
+                                    .foregroundStyle(.secondary)
+
+                                Spacer()
+
+                                Text(groop.category)
+                                    .font(.caption.weight(.semibold))
+                                    .foregroundStyle(.secondary)
+                                    .padding(.horizontal, 9)
+                                    .padding(.vertical, 5)
+                                    .background(Color(uiColor: .tertiarySystemFill), in: Capsule())
+
+                                Text("Open")
+                                    .font(.caption.weight(.semibold))
+                                    .foregroundStyle(.white)
+                                    .padding(.horizontal, 12)
+                                    .padding(.vertical, 6)
+                                    .background(.indigo, in: Capsule())
+                            }
                         }
+                        .padding(14)
+                        .background(Color(uiColor: .secondarySystemBackground), in: RoundedRectangle(cornerRadius: 16, style: .continuous))
+                        .overlay(
+                            RoundedRectangle(cornerRadius: 16, style: .continuous)
+                                .strokeBorder(.white.opacity(0.2), lineWidth: 1)
+                        )
                     }
                     .buttonStyle(.plain)
+                    .contextMenu {
+                        Button("Open Groop Chat", systemImage: "message.fill") {
+                            router.navigate(to: .groopChat(groop.id, prefill: nil))
+                        }
+                        Button("View Members", systemImage: "person.3.fill") {
+                            router.navigate(to: .groopMembers(groop.id))
+                        }
+                    }
                     .accessibilityIdentifier("myGroopRow_\(groop.id.uuidString)")
                     .accessibilityLabel("\(groop.name), \(groop.memberCount) members")
                 }

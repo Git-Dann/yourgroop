@@ -93,25 +93,29 @@ struct GroopMembersView: View {
         VStack(alignment: .leading, spacing: 10) {
             Text("People in this groop")
                 .font(.headline)
+                .foregroundStyle(.white)
 
             Text("Find collaborators by role, send a quick message, or recommend someone.")
                 .font(.subheadline)
-                .foregroundStyle(.secondary)
+                .foregroundStyle(.white.opacity(0.84))
 
             ScrollView(.horizontal, showsIndicators: false) {
                 HStack(spacing: 10) {
                     ForEach(viewModel.members.prefix(8)) { member in
                         VStack(spacing: 6) {
                             Circle()
-                                .fill(.thinMaterial)
+                                .fill(.white.opacity(0.14))
                                 .frame(width: 44, height: 44)
                                 .overlay(
                                     Text(initials(for: member.name))
                                         .font(.caption.weight(.semibold))
+                                        .foregroundStyle(.white)
                                 )
+                                .overlay(Circle().stroke(.white.opacity(0.25), lineWidth: 1))
 
                             Text(firstName(from: member.name))
                                 .font(.caption2)
+                                .foregroundStyle(.white.opacity(0.9))
                                 .lineLimit(1)
                         }
                         .frame(width: 58)
@@ -120,18 +124,14 @@ struct GroopMembersView: View {
             }
         }
         .frame(maxWidth: .infinity, alignment: .leading)
-        .padding(14)
+        .padding(16)
         .background(
-            LinearGradient(
-                colors: [Color(uiColor: .systemIndigo).opacity(0.14), Color(uiColor: .systemTeal).opacity(0.14)],
-                startPoint: .topLeading,
-                endPoint: .bottomTrailing
-            ),
+            Color(red: 0.157, green: 0.180, blue: 0.537),
             in: RoundedRectangle(cornerRadius: 16, style: .continuous)
         )
         .overlay(
             RoundedRectangle(cornerRadius: 16, style: .continuous)
-                .strokeBorder(.white.opacity(0.2), lineWidth: 1)
+                .strokeBorder(.white.opacity(0.14), lineWidth: 1)
         )
     }
 
@@ -143,10 +143,10 @@ struct GroopMembersView: View {
     }
 
     private func memberCard(_ member: GroopMember, highlight: Bool) -> some View {
-        SurfaceCard {
+        VStack(alignment: .leading, spacing: 12) {
             HStack(alignment: .top, spacing: 12) {
                 Circle()
-                    .fill(.regularMaterial)
+                    .fill(.thinMaterial)
                     .frame(width: 42, height: 42)
                     .overlay(
                         Text(initials(for: member.name))
@@ -186,9 +186,11 @@ struct GroopMembersView: View {
                     Label("Message", systemImage: "message.fill")
                         .frame(maxWidth: .infinity)
                 }
-                .buttonStyle(.borderedProminent)
-                .tint(Color(uiColor: .systemTeal))
-                .controlSize(.regular)
+                .buttonStyle(.plain)
+                .font(.subheadline.weight(.semibold))
+                .foregroundStyle(.white)
+                .frame(maxWidth: .infinity, minHeight: 44)
+                .background(Color(uiColor: .systemTeal), in: Capsule())
 
                 Button {
                     recommendationTarget = member
@@ -201,14 +203,25 @@ struct GroopMembersView: View {
                             .frame(maxWidth: .infinity)
                     }
                 }
-                .buttonStyle(.bordered)
-                .tint(recommendedMemberIDs.contains(member.id) ? .green : .primary)
-                .controlSize(.regular)
+                .buttonStyle(.plain)
+                .font(.subheadline.weight(.semibold))
+                .foregroundStyle(recommendedMemberIDs.contains(member.id) ? Color.green : .primary)
+                .frame(maxWidth: .infinity, minHeight: 44)
+                .background(.thinMaterial, in: Capsule())
+                .overlay(
+                    Capsule()
+                        .strokeBorder(
+                            recommendedMemberIDs.contains(member.id) ? Color.green.opacity(0.3) : Color(uiColor: .separator).opacity(0.22),
+                            lineWidth: 1
+                        )
+                )
             }
         }
+        .padding(14)
+        .background(.ultraThinMaterial, in: RoundedRectangle(cornerRadius: 16, style: .continuous))
         .overlay(
-            RoundedRectangle(cornerRadius: 14, style: .continuous)
-                .strokeBorder(highlight ? Color(uiColor: .systemBlue).opacity(0.28) : .clear, lineWidth: 1)
+            RoundedRectangle(cornerRadius: 16, style: .continuous)
+                .strokeBorder(highlight ? Color(uiColor: .systemBlue).opacity(0.32) : .white.opacity(0.18), lineWidth: 1)
         )
     }
 

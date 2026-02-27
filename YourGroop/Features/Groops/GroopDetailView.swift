@@ -47,160 +47,152 @@ struct GroopDetailView: View {
     }
 
     var body: some View {
-        ScrollView {
-            if viewModel.isLoading {
-                LoadingView(title: "Loading Groop")
-                    .frame(minHeight: 220)
-                    .padding()
-            } else if let groop = viewModel.groop {
-                VStack(alignment: .leading, spacing: 18) {
-                    heroCard(for: groop)
-                    quickActions(for: groop)
+        GeometryReader { geo in
+            ScrollView {
+                if viewModel.isLoading {
+                    LoadingView(title: "Loading Groop")
+                        .frame(minHeight: 220)
+                        .padding()
+                } else if let groop = viewModel.groop {
+                    VStack(alignment: .leading, spacing: 0) {
+                        heroCard(for: groop, width: geo.size.width)
 
-                    SurfaceCard {
-                        HStack(alignment: .firstTextBaseline) {
-                            sectionTitle("Members", icon: "person.3.fill")
-                            Spacer()
-                            Button("See all") {
-                                router.navigate(to: .groopMembers(groop.id))
-                            }
-                            .font(.subheadline.weight(.medium))
-                        }
+                        VStack(alignment: .leading, spacing: 16) {
+                            quickActions(for: groop)
 
-                        if viewModel.members.isEmpty {
-                            Text("Members are loading.")
-                                .font(.subheadline)
-                                .foregroundStyle(.secondary)
-                        } else {
-                            HStack(spacing: 8) {
-                                ForEach(viewModel.members.prefix(6)) { member in
-                                    Circle()
-                                        .fill(.thinMaterial)
-                                        .frame(width: 34, height: 34)
-                                        .overlay(
-                                            Text(initials(for: member.name))
-                                                .font(.caption2.weight(.semibold))
-                                        )
+                            inviteCard {
+                                HStack(alignment: .firstTextBaseline) {
+                                    sectionTitle("Members", icon: "person.3.fill")
+                                    Spacer()
+                                    Button("See all") {
+                                        router.navigate(to: .groopMembers(groop.id))
+                                    }
+                                    .font(.subheadline.weight(.medium))
+                                }
+
+                                if viewModel.members.isEmpty {
+                                    Text("Members are loading.")
+                                        .font(.subheadline)
+                                        .foregroundStyle(.secondary)
+                                } else {
+                                    HStack(spacing: -6) {
+                                        ForEach(viewModel.members.prefix(6)) { member in
+                                            Circle()
+                                                .fill(.thinMaterial)
+                                                .frame(width: 34, height: 34)
+                                                .overlay(
+                                                    Text(initials(for: member.name))
+                                                        .font(.caption2.weight(.semibold))
+                                                )
+                                                .overlay(
+                                                    Circle().stroke(.white.opacity(0.7), lineWidth: 1)
+                                                )
+                                        }
+                                    }
+
+                                    if let host = viewModel.members.first(where: { $0.isHost }) {
+                                        Text("Hosted by \(host.name)")
+                                            .font(.subheadline)
+                                            .foregroundStyle(.secondary)
+                                    }
                                 }
                             }
 
-                            if let host = viewModel.members.first(where: { $0.isHost }) {
-                                Text("Hosted by \(host.name)")
-                                    .font(.subheadline)
-                                    .foregroundStyle(.secondary)
+                            VStack(alignment: .leading, spacing: 10) {
+                                sectionTitle("Feed", icon: "bolt.fill")
+
+                                if viewModel.feedItems.isEmpty {
+                                    EmptyStateView(systemImage: "text.bubble", title: "No Feed Activity", message: "Activity updates will appear here.")
+                                } else {
+                                    ForEach(viewModel.feedItems) { item in
+                                        infoRowCard(
+                                            icon: "bolt.fill",
+                                            iconColor: .blue,
+                                            title: item.message,
+                                            subtitle: groop.name,
+                                            meta: item.timestamp.formatted(date: .abbreviated, time: .shortened)
+                                        )
+                                    }
+                                }
                             }
-                        }
-                    }
 
-                    VStack(alignment: .leading, spacing: 10) {
-                        sectionTitle("Feed", icon: "bolt.fill")
+                            VStack(alignment: .leading, spacing: 10) {
+                                sectionTitle("Announcements", icon: "megaphone.fill")
 
-                        if viewModel.feedItems.isEmpty {
-                            EmptyStateView(systemImage: "text.bubble", title: "No Feed Activity", message: "Activity updates will appear here.")
-                        } else {
-                            ForEach(viewModel.feedItems) { item in
-                                SurfaceCard {
-                                    Text(item.message)
-                                        .font(.body)
-                                    Text(item.timestamp.formatted(date: .abbreviated, time: .shortened))
+                                if viewModel.announcements.isEmpty {
+                                    EmptyStateView(systemImage: "megaphone", title: "No Announcements", message: "Post the first update for this Groop.")
+                                } else {
+                                    ForEach(viewModel.announcements) { announcement in
+                                        Button {
+                                            router.navigate(to: .announcementDetail(groopId: groop.id, announcementId: announcement.id))
+                                        } label: {
+                                            infoRowCard(
+                                                icon: "megaphone.fill",
+                                                iconColor: .orange,
+                                                title: announcement.title,
+                                                subtitle: announcement.body,
+                                                meta: announcement.createdAt.formatted(date: .abbreviated, time: .shortened),
+                                                cta: "Open"
+                                            )
+                                        }
+                                        .buttonStyle(.plain)
+                                    }
+                                }
+                            }
+
+                            inviteCard {
+                                HStack {
+                                    sectionTitle("Groop Chat", icon: "message.fill")
+                                    Spacer()
+                                    Text("\(viewModel.messages.count) chats")
                                         .font(.caption)
                                         .foregroundStyle(.secondary)
                                 }
-                            }
-                        }
-                    }
 
-                    VStack(alignment: .leading, spacing: 10) {
-                        sectionTitle("Announcements", icon: "megaphone.fill")
+                                if let latest = viewModel.messages.last {
+                                    HStack(alignment: .top, spacing: 10) {
+                                        Circle()
+                                            .fill(.thinMaterial)
+                                            .frame(width: 32, height: 32)
+                                            .overlay(
+                                                Text(initials(for: latest.senderName))
+                                                    .font(.caption2.weight(.semibold))
+                                            )
 
-                        if viewModel.announcements.isEmpty {
-                            EmptyStateView(systemImage: "megaphone", title: "No Announcements", message: "Post the first update for this Groop.")
-                        } else {
-                            ForEach(viewModel.announcements) { announcement in
-                                Button {
-                                    router.navigate(to: .announcementDetail(groopId: groop.id, announcementId: announcement.id))
-                                } label: {
-                                    SurfaceCard {
-                                        HStack(alignment: .top, spacing: 10) {
-                                            Image(systemName: "megaphone.fill")
-                                                .foregroundStyle(.orange)
+                                        VStack(alignment: .leading, spacing: 4) {
+                                            Text(latest.senderName)
+                                                .font(.caption.weight(.medium))
+                                                .foregroundStyle(.secondary)
+                                            Text(latest.body)
                                                 .font(.subheadline)
-
-                                            VStack(alignment: .leading, spacing: 6) {
-                                                Text(announcement.title)
-                                                    .font(.headline)
-                                                    .multilineTextAlignment(.leading)
-
-                                                Text(announcement.body)
-                                                    .font(.body)
-                                                    .lineLimit(2)
-
-                                                Text(announcement.createdAt.formatted(date: .abbreviated, time: .shortened))
-                                                    .font(.caption)
-                                                    .foregroundStyle(.secondary)
-                                            }
-
-                                            Spacer(minLength: 8)
-                                            Image(systemName: "chevron.right")
-                                                .font(.caption.weight(.semibold))
-                                                .foregroundStyle(.tertiary)
-                                                .padding(.top, 4)
+                                                .lineLimit(2)
                                         }
                                     }
-                                }
-                                .buttonStyle(.plain)
-                            }
-                        }
-                    }
-
-                    SurfaceCard {
-                        HStack {
-                            sectionTitle("Groop Chat", icon: "message.fill")
-                            Spacer()
-                            Text("\(viewModel.messages.count) chats")
-                                .font(.caption)
-                                .foregroundStyle(.secondary)
-                        }
-
-                        if let latest = viewModel.messages.last {
-                            HStack(alignment: .top, spacing: 10) {
-                                Circle()
-                                    .fill(.thinMaterial)
-                                    .frame(width: 32, height: 32)
-                                    .overlay(
-                                        Text(initials(for: latest.senderName))
-                                            .font(.caption2.weight(.semibold))
-                                    )
-
-                                VStack(alignment: .leading, spacing: 4) {
-                                    Text(latest.senderName)
-                                        .font(.caption.weight(.medium))
-                                        .foregroundStyle(.secondary)
-                                    Text(latest.body)
+                                } else {
+                                    Text("No messages yet. Say hi and start the conversation.")
                                         .font(.subheadline)
-                                        .lineLimit(2)
+                                        .foregroundStyle(.secondary)
                                 }
-                            }
-                        } else {
-                            Text("No messages yet. Say hi and start the conversation.")
-                                .font(.subheadline)
-                                .foregroundStyle(.secondary)
-                        }
 
-                        Button {
-                            router.navigate(to: .groopChat(groop.id, prefill: nil))
-                        } label: {
-                            Label("Join the chat", systemImage: "bubble.left.and.bubble.right.fill")
-                                .frame(maxWidth: .infinity, alignment: .leading)
+                                Button {
+                                    router.navigate(to: .groopChat(groop.id, prefill: nil))
+                                } label: {
+                                    Label("Open chat", systemImage: "bubble.left.and.bubble.right.fill")
+                                        .frame(maxWidth: .infinity, alignment: .leading)
+                                }
+                                .buttonStyle(.borderedProminent)
+                                .controlSize(.regular)
+                            }
                         }
-                        .buttonStyle(.borderedProminent)
-                        .controlSize(.large)
+                        .frame(width: geo.size.width - 32, alignment: .leading)
+                        .padding(.horizontal, 16)
+                        .padding(.top, 14)
+                        .padding(.bottom, 18)
                     }
+                } else {
+                    EmptyStateView(systemImage: "exclamationmark.triangle", title: "Groop Not Found", message: "This Groop may no longer be available.")
+                        .padding()
                 }
-                .padding()
-            } else {
-                EmptyStateView(systemImage: "exclamationmark.triangle", title: "Groop Not Found", message: "This Groop may no longer be available.")
-                    .padding()
             }
         }
         .background(
@@ -227,40 +219,46 @@ struct GroopDetailView: View {
         }
     }
 
-    private func heroCard(for groop: Groop) -> some View {
-        VStack(spacing: 10) {
-            Text(groop.name)
-                .font(.title2.weight(.bold))
-                .multilineTextAlignment(.center)
-                .accessibilityAddTraits(.isHeader)
+    private func heroCard(for groop: Groop, width: CGFloat) -> some View {
+        ZStack(alignment: .bottomLeading) {
+            Image(heroImageName(for: groop))
+                .resizable()
+                .scaledToFill()
+                .frame(width: width, height: 430)
+                .clipped()
 
-            HStack(spacing: 8) {
-                chipLabel(groop.category, systemImage: "tag.fill")
-                chipLabel(groop.location, systemImage: "mappin.circle.fill")
-            }
-
-            chipLabel("\(groop.memberCount) members", systemImage: "person.2.fill")
-        }
-        .frame(maxWidth: .infinity)
-        .padding(.vertical, 28)
-        .padding(.horizontal, 18)
-        .background(
             LinearGradient(
-                colors: [
-                    Color(uiColor: .systemTeal).opacity(0.35),
-                    Color(uiColor: .systemBlue).opacity(0.28),
-                    Color(uiColor: .systemIndigo).opacity(0.32)
-                ],
-                startPoint: .topLeading,
-                endPoint: .bottomTrailing
-            ),
-            in: RoundedRectangle(cornerRadius: 22, style: .continuous)
-        )
+                colors: [.black.opacity(0.58), .black.opacity(0.24), .clear],
+                startPoint: .bottom,
+                endPoint: .top
+            )
+
+            VStack(alignment: .leading, spacing: 8) {
+                Text(groop.name)
+                    .font(.largeTitle.weight(.bold))
+                    .foregroundStyle(.white)
+                    .lineLimit(2)
+                    .accessibilityAddTraits(.isHeader)
+
+                Text("\(groop.category) • \(groop.location)")
+                    .font(.headline)
+                    .foregroundStyle(.white.opacity(0.92))
+                    .lineLimit(1)
+
+                Text("\(groop.memberCount) members")
+                    .font(.subheadline.weight(.semibold))
+                    .foregroundStyle(.white.opacity(0.9))
+            }
+            .padding(18)
+        }
+        .frame(width: width, height: 430, alignment: .bottomLeading)
+        .background(Color(uiColor: .secondarySystemBackground))
         .overlay(
-            RoundedRectangle(cornerRadius: 22, style: .continuous)
-                .strokeBorder(.white.opacity(0.22), lineWidth: 1)
+            Rectangle()
+                .fill(.white.opacity(0.08))
+                .frame(height: 1),
+            alignment: .bottom
         )
-        .shadow(color: Color.black.opacity(0.06), radius: 10, y: 4)
     }
 
     private func initials(for name: String) -> String {
@@ -274,66 +272,102 @@ struct GroopDetailView: View {
             .padding(.leading, 2)
     }
 
-    private func chipLabel(_ text: String, systemImage: String) -> some View {
-        Label(text, systemImage: systemImage)
-            .font(.caption.weight(.semibold))
-            .padding(.horizontal, 10)
-            .padding(.vertical, 6)
-            .background(.ultraThinMaterial, in: Capsule())
-    }
-
     private func quickActions(for groop: Groop) -> some View {
         HStack(spacing: 10) {
             Button {
                 isCreateSheetPresented = true
             } label: {
-                actionTile(
-                    title: "Post",
-                    subtitle: "Announcement",
-                    icon: "megaphone.fill",
-                    isPrimary: true
-                )
+                Label("Post", systemImage: "megaphone.fill")
+                    .lineLimit(1)
+                    .minimumScaleFactor(0.85)
+                    .font(.subheadline.weight(.semibold))
+                    .frame(maxWidth: .infinity, minHeight: 48)
+                    .background(Color(uiColor: .systemBlue), in: Capsule())
+                    .foregroundStyle(.white)
             }
             .buttonStyle(.plain)
 
             Button {
                 router.navigate(to: .groopChat(groop.id, prefill: nil))
             } label: {
-                actionTile(
-                    title: "Open",
-                    subtitle: "Groop Chat",
-                    icon: "message.fill",
-                    isPrimary: false
-                )
+                Label("Open Chat", systemImage: "message.fill")
+                    .lineLimit(1)
+                    .minimumScaleFactor(0.85)
+                    .font(.subheadline.weight(.semibold))
+                    .frame(maxWidth: .infinity, minHeight: 48)
+                    .background(.thinMaterial, in: Capsule())
+                    .overlay(
+                        Capsule()
+                            .strokeBorder(.blue.opacity(0.22), lineWidth: 1)
+                    )
+                    .foregroundStyle(Color(uiColor: .systemBlue))
             }
             .buttonStyle(.plain)
         }
+        .frame(maxWidth: .infinity, alignment: .leading)
     }
 
-    private func actionTile(title: String, subtitle: String, icon: String, isPrimary: Bool) -> some View {
-        VStack(alignment: .leading, spacing: 6) {
-            Image(systemName: icon)
-                .font(.subheadline.weight(.semibold))
-            Text(title)
-                .font(.headline)
-            Text(subtitle)
-                .font(.caption)
-                .foregroundStyle(isPrimary ? .white.opacity(0.85) : .secondary)
+    private func infoRowCard(icon: String, iconColor: Color, title: String, subtitle: String, meta: String, cta: String? = nil) -> some View {
+        inviteCard {
+            HStack(alignment: .top, spacing: 10) {
+                Image(systemName: icon)
+                    .foregroundStyle(iconColor)
+                    .font(.subheadline)
+
+                VStack(alignment: .leading, spacing: 4) {
+                    Text(title)
+                        .font(.subheadline.weight(.semibold))
+                        .multilineTextAlignment(.leading)
+                    Text(subtitle)
+                        .font(.footnote)
+                        .foregroundStyle(.secondary)
+                        .lineLimit(2)
+                    Text(meta)
+                        .font(.caption)
+                        .foregroundStyle(.secondary)
+                }
+
+                Spacer()
+
+                if let cta {
+                    Text(cta)
+                        .font(.caption.weight(.semibold))
+                        .foregroundStyle(.tint)
+                        .padding(.horizontal, 10)
+                        .padding(.vertical, 6)
+                        .background(Color.accentColor.opacity(0.12), in: Capsule())
+                }
+            }
         }
-        .foregroundStyle(isPrimary ? .white : .primary)
-        .frame(maxWidth: .infinity, alignment: .leading)
-        .padding(12)
-        .background(
-            isPrimary
-                ? AnyShapeStyle(
-                    LinearGradient(
-                        colors: [Color(uiColor: .systemBlue), Color(uiColor: .systemTeal)],
-                        startPoint: .topLeading,
-                        endPoint: .bottomTrailing
-                    )
-                )
-                : AnyShapeStyle(.regularMaterial),
-            in: RoundedRectangle(cornerRadius: 14, style: .continuous)
-        )
+    }
+
+    private func inviteCard<Content: View>(@ViewBuilder content: () -> Content) -> some View {
+        VStack(alignment: .leading, spacing: 10) {
+            content()
+        }
+            .padding(14)
+            .frame(maxWidth: .infinity, alignment: .leading)
+            .background(.ultraThinMaterial, in: RoundedRectangle(cornerRadius: 18, style: .continuous))
+            .overlay(
+                RoundedRectangle(cornerRadius: 18, style: .continuous)
+                    .strokeBorder(.white.opacity(0.2), lineWidth: 1)
+            )
+    }
+
+    private func heroImageName(for groop: Groop) -> String {
+        switch groop.category {
+        case "Fitness":
+            return "DiscoveryRunners"
+        case "Books":
+            return "DiscoveryBooks"
+        case "Co-Working":
+            return "DiscoveryCampfield"
+        case "Games":
+            return "DiscoveryGames"
+        case "Arts":
+            return "DiscoveryArts"
+        default:
+            return "LockHeroPhoto"
+        }
     }
 }

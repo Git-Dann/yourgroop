@@ -34,6 +34,7 @@
 		A00000010000000000000019 /* GroopChatView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A00001010000000000000019 /* GroopChatView.swift */; };
 		A0000001000000000000001A /* GroopMembersView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A0000101000000000000001A /* GroopMembersView.swift */; };
 		A0000001000000000000001B /* AnnouncementDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A0000101000000000000001B /* AnnouncementDetailView.swift */; };
+		A0000001000000000000001C /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = A0000101000000000000001C /* LaunchScreen.storyboard */; };
 		A00000020000000000000001 /* YourGroopTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = A00002010000000000000001 /* YourGroopTests.swift */; };
 		A00000020000000000000002 /* XCTest.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A00009010000000000000001 /* XCTest.framework */; };
 		A00000030000000000000001 /* YourGroopUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = A00003010000000000000001 /* YourGroopUITests.swift */; };
@@ -87,6 +88,7 @@
 		A00001010000000000000019 /* GroopChatView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GroopChatView.swift; sourceTree = "<group>"; };
 		A0000101000000000000001A /* GroopMembersView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GroopMembersView.swift; sourceTree = "<group>"; };
 		A0000101000000000000001B /* AnnouncementDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnnouncementDetailView.swift; sourceTree = "<group>"; };
+		A0000101000000000000001C /* LaunchScreen.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = LaunchScreen.storyboard; sourceTree = "<group>"; };
 		A00002010000000000000001 /* YourGroopTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = YourGroopTests.swift; sourceTree = "<group>"; };
 		A00002010000000000000002 /* YourGroopTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = YourGroopTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		A00003010000000000000001 /* YourGroopUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = YourGroopUITests.swift; sourceTree = "<group>"; };
@@ -220,6 +222,7 @@
 			children = (
 				A00001010000000000000014 /* Assets.xcassets */,
 				438E56042F5071B700505F5D /* AppIcon.png */,
+				A0000101000000000000001C /* LaunchScreen.storyboard */,
 			);
 			path = Resources;
 			sourceTree = "<group>";
@@ -409,6 +412,7 @@
 			files = (
 				438E56052F5071B700505F5D /* AppIcon.png in Resources */,
 				A00000010000000000000014 /* Assets.xcassets in Resources */,
+				A0000001000000000000001C /* LaunchScreen.storyboard in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

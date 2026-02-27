@@ -1,76 +1,102 @@
 import SwiftUI
+import UIKit
 
 struct SignInView: View {
     @Environment(AppModel.self) private var appModel
     @State private var isSigningIn = false
+    @State private var showSignUpMessage = false
 
     var body: some View {
-        ZStack {
+        ZStack(alignment: .bottom) {
+            heroImage
+                .ignoresSafeArea()
+
             LinearGradient(
-                colors: [
-                    Color(uiColor: .systemTeal).opacity(0.14),
-                    Color(uiColor: .systemIndigo).opacity(0.10),
-                    Color(uiColor: .systemBackground)
-                ],
-                startPoint: .topLeading,
-                endPoint: .bottomTrailing
+                colors: [.clear, .black.opacity(0.15), .black.opacity(0.3), .black.opacity(0.54)],
+                startPoint: .top,
+                endPoint: .bottom
             )
             .ignoresSafeArea()
 
-            VStack(spacing: 20) {
-                Image(systemName: "person.3.fill")
-                    .font(.system(size: 34, weight: .semibold))
-                    .foregroundStyle(.teal)
-                    .frame(width: 74, height: 74)
-                    .background(.ultraThinMaterial, in: RoundedRectangle(cornerRadius: 20, style: .continuous))
-
-                VStack(spacing: 8) {
+            VStack(spacing: 16) {
+                VStack(spacing: 6) {
                     Text("Welcome to YourGroop")
-                        .font(.title2.weight(.bold))
+                        .font(.title.weight(.bold))
+                        .foregroundStyle(.white)
 
-                    Text("Find and manage your local communities across the North West.")
-                        .font(.body)
-                        .foregroundStyle(.secondary)
+                    Text("Find and manage your local communities across the UK.")
+                        .font(.title3)
+                        .foregroundStyle(.white.opacity(0.95))
                         .multilineTextAlignment(.center)
                 }
 
-                Button {
-                    Task {
-                        isSigningIn = true
-                        await appModel.signIn()
-                        isSigningIn = false
+                VStack(spacing: 10) {
+                    Button {
+                        showSignUpMessage = true
+                    } label: {
+                        Label("Sign Up", systemImage: "person.badge.plus")
+                            .frame(maxWidth: .infinity)
                     }
-                } label: {
-                    Group {
-                        if isSigningIn {
-                            ProgressView()
-                                .tint(.white)
-                        } else {
-                            Label("Sign In", systemImage: "person.badge.key")
-                        }
-                    }
-                    .font(.headline)
-                    .frame(maxWidth: .infinity)
-                    .frame(height: 50)
-                }
-                .buttonStyle(.borderedProminent)
-                .controlSize(.large)
-                .disabled(isSigningIn)
-                .accessibilityLabel("Sign in")
-                .accessibilityHint("Starts mocked sign in and loads your groops")
+                    .buttonStyle(.borderedProminent)
+                    .buttonBorderShape(.capsule)
+                    .controlSize(.large)
+                    .accessibilityHint("Opens sign up guidance")
 
-                Text("Mocked authentication for starter app")
-                    .font(.footnote)
-                    .foregroundStyle(.secondary)
+                    Button {
+                        Task {
+                            isSigningIn = true
+                            await appModel.signIn()
+                            isSigningIn = false
+                        }
+                    } label: {
+                        ZStack {
+                            Text("Demo")
+                                .opacity(isSigningIn ? 0 : 1)
+                            ProgressView()
+                                .opacity(isSigningIn ? 1 : 0)
+                        }
+                        .frame(height: 22)
+                        .frame(maxWidth: .infinity)
+                    }
+                    .buttonStyle(.bordered)
+                    .buttonBorderShape(.capsule)
+                    .controlSize(.large)
+                    .tint(.white)
+                    .disabled(isSigningIn)
+                    .accessibilityHint("Enters the demo app")
+                }
             }
-            .padding(24)
-            .frame(maxWidth: 520)
-            .background(.regularMaterial, in: RoundedRectangle(cornerRadius: 24, style: .continuous))
-            .overlay(
-                RoundedRectangle(cornerRadius: 24, style: .continuous)
-                    .strokeBorder(.white.opacity(0.35), lineWidth: 1)
+            .padding(.horizontal, 24)
+            .padding(.bottom, 40)
+        }
+        .alert("Sign up is coming next", isPresented: $showSignUpMessage) {
+            Button("OK", role: .cancel) { }
+        } message: {
+            Text("Use Demo to explore the full app flow now.")
+        }
+    }
+
+    @ViewBuilder
+    private var heroImage: some View {
+        if UIImage(named: "LockHeroPhoto") != nil {
+            Image("LockHeroPhoto")
+                .resizable()
+                .scaledToFill()
+        } else {
+            LinearGradient(
+                colors: [
+                    Color(uiColor: .systemGray5),
+                    Color(uiColor: .systemGray4),
+                    Color(uiColor: .systemGray3)
+                ],
+                startPoint: .top,
+                endPoint: .bottom
             )
-            .padding(.horizontal, 20)
+            .overlay(
+                Image(systemName: "photo.fill")
+                    .font(.system(size: 42, weight: .semibold))
+                    .foregroundStyle(.white.opacity(0.8))
+            )
         }
     }
 }
