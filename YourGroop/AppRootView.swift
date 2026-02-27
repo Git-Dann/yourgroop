@@ -37,37 +37,46 @@ struct AppRootView: View {
         return (selectedTab == .discovery || selectedTab == .home) && router.path.isEmpty
     }
 
+    private var tabSelection: Binding<RootTab> {
+        Binding(
+            get: { selectedTab },
+            set: { newValue in
+                if newValue == .compose {
+                    let currentTab = selectedTab
+                    isComposeActionSheetPresented = true
+                    DispatchQueue.main.async {
+                        selectedTab = currentTab
+                    }
+                    return
+                }
+                selectedTab = newValue
+                if newValue != .discovery {
+                    lastNonDiscoveryTab = newValue
+                }
+            }
+        )
+    }
+
     var body: some View {
         @Bindable var router = router
 
         NavigationStack(path: $router.path) {
             rootContent
-            .navigationTitle(selectedTabTitle)
-            .navigationBarTitleDisplayMode(.inline)
-            .toolbar(shouldHideNavigationBar ? .hidden : .visible, for: .navigationBar)
-            .onChange(of: selectedTab) { _, newValue in
-                if newValue == .compose {
-                    selectedTab = lastNonDiscoveryTab
-                    isComposeActionSheetPresented = true
-                    return
+                .navigationTitle(selectedTabTitle)
+                .navigationBarTitleDisplayMode(.inline)
+                .toolbar(shouldHideNavigationBar ? .hidden : .visible, for: .navigationBar)
+                .navigationDestination(for: AppRoute.self) { route in
+                    switch route {
+                    case .groopDetail(let groopId):
+                        GroopDetailView(groopId: groopId, repository: appModel.repository)
+                    case .groopChat(let groopId, let prefill):
+                        GroopChatView(groopId: groopId, repository: appModel.repository, prefillText: prefill)
+                    case .groopMembers(let groopId):
+                        GroopMembersView(groopId: groopId, repository: appModel.repository)
+                    case .announcementDetail(let groopId, let announcementId):
+                        AnnouncementDetailView(groopId: groopId, announcementId: announcementId, repository: appModel.repository)
+                    }
                 }
-
-                if newValue != .discovery {
-                    lastNonDiscoveryTab = newValue
-                }
-            }
-            .navigationDestination(for: AppRoute.self) { route in
-                switch route {
-                case .groopDetail(let groopId):
-                    GroopDetailView(groopId: groopId, repository: appModel.repository)
-                case .groopChat(let groopId, let prefill):
-                    GroopChatView(groopId: groopId, repository: appModel.repository, prefillText: prefill)
-                case .groopMembers(let groopId):
-                    GroopMembersView(groopId: groopId, repository: appModel.repository)
-                case .announcementDetail(let groopId, let announcementId):
-                    AnnouncementDetailView(groopId: groopId, announcementId: announcementId, repository: appModel.repository)
-                }
-            }
         }
     }
 
@@ -85,7 +94,7 @@ struct AppRootView: View {
     }
 
     private var mainTabs: some View {
-        TabView(selection: $selectedTab) {
+        TabView(selection: tabSelection) {
             Tab("Home", systemImage: "house.fill", value: RootTab.home) {
                 HomeDashboardView(
                     onOpenMyGroops: { selectedTab = .myGroops },
@@ -111,6 +120,21 @@ struct AppRootView: View {
             }
         }
         .tint(Color(uiColor: .systemBlue))
+        .overlay(alignment: .bottomTrailing) {
+            Color.clear
+                .frame(width: 72, height: 72)
+                .padding(.trailing, 34)
+                .padding(.bottom, 8)
+                .allowsHitTesting(false)
+                .popover(
+                    isPresented: $isComposeActionSheetPresented,
+                    attachmentAnchor: .point(.top),
+                    arrowEdge: .bottom
+                ) {
+                    composeMenuList
+                        .presentationCompactAdaptation(.popover)
+                }
+        }
         .sheet(isPresented: $isProfilePresented) {
             NavigationStack {
                 ProfileHubView(
@@ -144,28 +168,83 @@ struct AppRootView: View {
         .sheet(isPresented: $isStartThreadSheetPresented) {
             startThreadSheet
         }
-        .confirmationDialog(
-            "Compose",
-            isPresented: $isComposeActionSheetPresented,
-            titleVisibility: .visible
-        ) {
-            Button("Compose Message") {
+    }
+
+    private var composeMenuList: some View {
+        VStack(spacing: 10) {
+            composeMenuItem(
+                title: "Compose Message",
+                systemImage: "square.and.pencil",
+                tint: .blue
+            ) {
+                isComposeActionSheetPresented = false
                 Task {
                     await loadComposeTargets()
                     isComposeMessageSheetPresented = true
                 }
             }
-            Button("Start New Thread") {
+
+            composeMenuItem(
+                title: "Start New Thread",
+                systemImage: "text.bubble",
+                tint: .indigo
+            ) {
+                isComposeActionSheetPresented = false
                 composeGroopSearchText = ""
                 isStartThreadSheetPresented = true
             }
-            Button("Broadcast") {
+
+            composeMenuItem(
+                title: "Broadcast",
+                systemImage: "megaphone",
+                tint: .teal
+            ) {
+                isComposeActionSheetPresented = false
                 if let groop = appModel.myGroops.first {
                     router.navigate(to: .groopChat(groop.id, prefill: "Broadcast: "))
                 }
             }
-            Button("Cancel", role: .cancel) { }
         }
+        .padding(12)
+        .frame(width: 288)
+        .background(.thinMaterial, in: RoundedRectangle(cornerRadius: 24, style: .continuous))
+        .overlay(
+            RoundedRectangle(cornerRadius: 24, style: .continuous)
+                .strokeBorder(Color.white.opacity(0.35), lineWidth: 1)
+        )
+    }
+
+    private func composeMenuItem(
+        title: String,
+        systemImage: String,
+        tint: Color,
+        action: @escaping () -> Void
+    ) -> some View {
+        Button(action: action) {
+            HStack(spacing: 10) {
+                Image(systemName: systemImage)
+                    .font(.subheadline.weight(.semibold))
+                    .foregroundStyle(tint)
+                    .frame(width: 22)
+
+                Text(title)
+                    .font(.headline.weight(.semibold))
+                    .foregroundStyle(.primary)
+
+                Spacer(minLength: 8)
+
+                Image(systemName: "chevron.right")
+                    .font(.footnote.weight(.semibold))
+                    .foregroundStyle(.tertiary)
+            }
+            .padding(.horizontal, 14)
+            .padding(.vertical, 12)
+            .background(
+                RoundedRectangle(cornerRadius: 16, style: .continuous)
+                    .fill(Color(uiColor: .secondarySystemBackground).opacity(0.82))
+            )
+        }
+        .buttonStyle(.plain)
     }
 
     private var startThreadSheet: some View {
